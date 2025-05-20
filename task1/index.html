@@ -1,0 +1,86 @@
+<DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Calculator</title>
+    </head>
+    <body>
+    <h1>Expense Calculator</h1>
+    <table id="expense-table">
+        <thead>
+        <tr>
+            <th>Category</th>
+            <th>Amount ($)</th>
+        </tr>
+        </thead>
+        <tbody id="expense-body">
+        <!-- table rows will be generated dynamically -->
+        </tbody>
+    </table>
+    <button id="add-expense-btn">Add Expense</button>
+    <button id="calculate-btn">Calculate</button>
+    <div id="result-container">
+        <h2>Results</h2>
+        <p id="total-expense"></p>
+        <p id="average-daily-expense"></p>
+        <h3>Top 3 Expenses</h3>
+        <ul id="top-expenses"></ul>
+    </div>
+    <script>
+        // script.js
+        let expenses = []; // array to store expense objects
+        const expenseTableBody = document.getElementById('expense-body');
+        const addExpenseBtn = document.getElementById('add-expense-btn');
+        const calculateBtn = document.getElementById('calculate-btn');
+        const resultContainer = document.getElementById('result-container');
+        const totalExpenseElement = document.getElementById('total-expense');
+        const averageDailyExpenseElement = document.getElementById('average-daily-expense');
+        const topExpensesElement = document.getElementById('top-expenses');
+
+        // function to add new expense to the table
+        function addExpense() {
+        const category = prompt('Enter expense category:');
+        const amount = parseFloat(prompt('Enter expense amount:'));
+        if (category && amount) {
+            const expense = { category, amount };
+            expenses.push(expense);
+            renderExpenseTable();
+        }
+        }
+
+        // function to render the expense table
+        function renderExpenseTable() {
+        expenseTableBody.innerHTML = '';
+        expenses.forEach((expense, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+            <td>${expense.category}</td>
+            <td>${expense.amount}</td>
+            `;
+            expenseTableBody.appendChild(row);
+        });
+        }
+
+        // function to calculate and display results
+        function calculateResults() {
+        const totalExpense = expenses.reduce((acc, expense) => acc + expense.amount, 0);
+        const averageDailyExpense = totalExpense / 30;
+        const topExpenses = expenses.sort((a, b) => b.amount - a.amount).slice(0, 3);
+
+        totalExpenseElement.textContent = `Total Expense: $${totalExpense.toFixed(2)}`;
+        averageDailyExpenseElement.textContent = `Average Daily Expense: $${averageDailyExpense.toFixed(2)}`;
+        topExpensesElement.innerHTML = '';
+        topExpenses.forEach((expense) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${expense.category}: $${expense.amount}`;
+            topExpensesElement.appendChild(listItem);
+        });
+        }
+
+        // event listeners
+        addExpenseBtn.addEventListener('click', addExpense);
+        calculateBtn.addEventListener('click', calculateResults);
+    </script>
+    </body>
+</html>
